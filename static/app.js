@@ -1199,18 +1199,119 @@ async function saveAccountProfile() {
   }
 }
 
+function populateQuestionsForCategory(category) {
+  const select = document.getElementById("questionSelect");
+  if (!select) return;
+  select.innerHTML = "";
+
+  let questions = [];
+  if (state.sweQuestions && state.sweQuestions[category]) {
+    questions = state.sweQuestions[category].map((item) => item.question);
+  } else if (category === "All Questions" && state.sweQuestions) {
+    for (const cat in state.sweQuestions) {
+      questions.push(...state.sweQuestions[cat].map((item) => item.question));
+    }
+  } else {
+    questions = state.questions || [];
+  }
+
+  questions.forEach((q) => {
+    const opt = document.createElement("option");
+    opt.value = q;
+    opt.textContent = q;
+    select.appendChild(opt);
+  });
+
+  const customOpt = document.createElement("option");
+  customOpt.value = "Add custom question...";
+  customOpt.textContent = "Add custom question...";
+  select.appendChild(customOpt);
+
+  document.getElementById("customQuestion")?.classList.add("hidden");
+  setPracticePrompt(currentQuestion());
+}
+
+function renderC10Feedback(evalData) {
+  const container = document.getElementById("c10FeedbackContainer");
+  if (!container || !evalData) return;
+
+  const totalScore = typeof evalData.total_score === "number" ? evalData.total_score.toFixed(1) : "0.0";
+  document.getElementById("c10TotalScore").textContent = totalScore;
+  document.getElementById("c10PerformanceTier").textContent = evalData.performance_tier || "Evaluation Complete";
+  document.getElementById("c10PromptBadge").textContent = `Prompt ${(evalData.prompt_version_used || "final").toUpperCase()}`;
+
+  const statusBadge = document.getElementById("c10StatusNotice");
+  if (statusBadge) {
+    if (evalData.is_simulated) {
+      statusBadge.textContent = "SIMULATED DEMO";
+      statusBadge.classList.remove("hidden");
+    } else if (evalData.is_verified_benchmark) {
+      statusBadge.textContent = "VERIFIED EXPERIMENT";
+      statusBadge.classList.remove("hidden");
+    } else {
+      statusBadge.classList.add("hidden");
+    }
+  }
+
+  document.getElementById("c10AssessmentSummary").textContent =
+    evalData.summary_assessment || (evalData.raw_markdown ? evalData.raw_markdown.split("\n")[0] : "");
+
+  // Rubric breakdown
+  const bd = evalData.score_breakdown || {};
+  if (bd.technical_accuracy) {
+    document.getElementById("c10TechScore").textContent = `${bd.technical_accuracy.score} / 4`;
+    document.getElementById("c10TechReason").textContent = bd.technical_accuracy.reason || "Accurate domain terminology and logic.";
+  }
+  if (bd.completeness) {
+    document.getElementById("c10CompScore").textContent = `${bd.completeness.score} / 2`;
+    document.getElementById("c10CompReason").textContent = bd.completeness.reason || "Expected concepts addressed.";
+  }
+  if (bd.relevance) {
+    document.getElementById("c10RelScore").textContent = `${bd.relevance.score} / 2`;
+    document.getElementById("c10RelReason").textContent = bd.relevance.reason || "Directly answered prompt.";
+  }
+  if (bd.communication_clarity) {
+    document.getElementById("c10CommScore").textContent = `${bd.communication_clarity.score} / 2`;
+    document.getElementById("c10CommReason").textContent = bd.communication_clarity.reason || "Clear logical flow.";
+  }
+
+  // Strengths
+  const strengthsUl = document.getElementById("c10StrengthsList");
+  strengthsUl.innerHTML = "";
+  (evalData.strengths || []).forEach((s) => {
+    const li = document.createElement("li");
+    li.textContent = s;
+    strengthsUl.appendChild(li);
+  });
+
+  // Improvements
+  const improveUl = document.getElementById("c10ImprovementsList");
+  improveUl.innerHTML = "";
+  (evalData.areas_for_improvement || []).forEach((imp) => {
+    const li = document.createElement("li");
+    li.textContent = imp;
+    improveUl.appendChild(li);
+  });
+
+  // Improved answer
+  document.getElementById("c10ModelAnswerText").textContent =
+    evalData.improved_answer || "Practice explaining concepts with definition, underlying structures, complexities, and real-world examples.";
+
+  // Follow-up question
+  const followupText = evalData.follow_up_question || "Can you explain the trade-offs of this approach?";
+  document.getElementById("c10FollowupText").textContent = followupText;
+
+  container.classList.remove("hidden");
+}
+
 async function loadMeta() {
   const meta = await api("/api/meta");
   state.questions = [...meta.questions, "Add custom question..."];
+  state.sweQuestions = meta.swe_questions || {};
 
-  const select = document.getElementById("questionSelect");
-  select.innerHTML = "";
-  state.questions.forEach((q) => {
-    const option = document.createElement("option");
-    option.value = q;
-    option.textContent = q;
-    select.appendChild(option);
-  });
+  const categorySelect = document.getElementById("categorySelect");
+  const selectedCat = categorySelect ? categorySelect.value : "Data Structures & Algorithms";
+  populateQuestionsForCategory(selectedCat);
 
   // Keep the practice prompt synced with the selected question.
   setPracticePrompt(currentQuestion());
@@ -1375,12 +1476,28 @@ async function submitTextPractice() {
     }
     updateRlSummary(result);
   } else {
+    const job_role = document.getElementById("jobRoleSelect")?.value || "Software Developer";
+    const category = document.getElementById("categorySelect")?.value || "Data Structures & Algorithms";
+    const prompt_version = document.getElementById("promptVersionSelect")?.value || "final";
+
     result = await api("/api/practice/text", {
       method: "POST",
-      body: { question, answer, root_question: state.practiceThread.rootQuestion, thread_turns: turns }
+      body: {
+        question,
+        answer,
+        root_question: state.practiceThread.rootQuestion,
+        thread_turns: turns,
+        job_role,
+        category,
+        prompt_version
+      }
     });
   }
   setLoading(false);
+
+  if (result && result.c10_evaluation) {
+    renderC10Feedback(result.c10_evaluation);
+  }
 
   if (result && result.gamification) {
     const btn = document.getElementById("submitTextBtn") || document.body;
@@ -1443,17 +1560,28 @@ async function submitAudioPractice() {
     }
     updateRlSummary(result);
   } else {
+    const job_role = document.getElementById("jobRoleSelect")?.value || "Software Developer";
+    const category = document.getElementById("categorySelect")?.value || "Data Structures & Algorithms";
+    const prompt_version = document.getElementById("promptVersionSelect")?.value || "final";
+
     result = await api("/api/practice/audio", {
       method: "POST",
       body: {
         question,
         transcription,
         root_question: state.practiceThread.rootQuestion,
-        thread_turns: turns
+        thread_turns: turns,
+        job_role,
+        category,
+        prompt_version
       }
     });
   }
   setLoading(false);
+
+  if (result && result.c10_evaluation) {
+    renderC10Feedback(result.c10_evaluation);
+  }
 
   if (result && result.gamification) {
     const btn = document.getElementById("submitAudioBtn") || document.body;
@@ -1798,8 +1926,55 @@ function setupEvents() {
     document.getElementById("customQuestion").classList.toggle("hidden", e.target.value !== "Add custom question...");
     resetPracticeThread("Question changed — starting a new practice flow.");
     document.getElementById("analysisResult").textContent = "";
+    document.getElementById("c10FeedbackContainer")?.classList.add("hidden");
     setPracticePrompt(currentQuestion());
   });
+
+  const categorySelect = document.getElementById("categorySelect");
+  if (categorySelect) {
+    categorySelect.addEventListener("change", (e) => {
+      populateQuestionsForCategory(e.target.value);
+      resetPracticeThread("Category changed — starting a new practice flow.");
+      document.getElementById("analysisResult").textContent = "";
+      document.getElementById("c10FeedbackContainer")?.classList.add("hidden");
+    });
+  }
+
+  const copyModelBtn = document.getElementById("copyModelAnswerBtn");
+  if (copyModelBtn) {
+    copyModelBtn.addEventListener("click", () => {
+      const text = document.getElementById("c10ModelAnswerText")?.textContent || "";
+      if (text) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast("Model answer copied to clipboard!", "success");
+        }).catch(() => {
+          showToast("Could not copy text", "warning");
+        });
+      }
+    });
+  }
+
+  const acceptFollowupBtn = document.getElementById("acceptFollowupBtn");
+  if (acceptFollowupBtn) {
+    acceptFollowupBtn.addEventListener("click", () => {
+      const followup = document.getElementById("c10FollowupText")?.textContent || "";
+      if (followup) {
+        state.practiceThread.nextQuestion = followup;
+        setPracticePrompt(followup);
+        const textAns = document.getElementById("textAnswer");
+        if (textAns) {
+          textAns.value = "";
+          textAns.focus();
+        }
+        const audioTrans = document.getElementById("audioTranscript");
+        if (audioTrans) {
+          audioTrans.value = "";
+        }
+        showToast("Ready to answer follow-up question!", "info");
+        speakText(followup);
+      }
+    });
+  }
 
   const customQuestion = document.getElementById("customQuestion");
   if (customQuestion) {

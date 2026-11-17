@@ -213,6 +213,42 @@
           <option>Video Practice</option>
         </select>
 
+        <!-- Problem C10: Software Engineering Interview Configuration -->
+        <div class="c10-setup-grid">
+          <div>
+            <label for="jobRoleSelect">Target Job Role</label>
+            <select id="jobRoleSelect" title="Choose target job role">
+              <option value="Software Developer" selected>Software Developer</option>
+              <option value="Backend Engineer">Backend Engineer</option>
+              <option value="Frontend Engineer">Frontend Engineer</option>
+              <option value="Full Stack Developer">Full Stack Developer</option>
+              <option value="DevOps / SRE Engineer">DevOps / SRE Engineer</option>
+              <option value="Data Engineer">Data Engineer</option>
+            </select>
+          </div>
+          <div>
+            <label for="categorySelect">Interview Category (Problem C10)</label>
+            <select id="categorySelect" title="Choose interview category">
+              <option value="Data Structures & Algorithms" selected>Data Structures & Algorithms</option>
+              <option value="Core CS - DBMS">Core CS: DBMS</option>
+              <option value="Core CS - Operating Systems">Core CS: Operating Systems</option>
+              <option value="Core CS - OOP">Core CS: Object-Oriented Programming</option>
+              <option value="Core CS - Computer Networks">Core CS: Computer Networks</option>
+              <option value="Software Development Projects">Software Development Projects</option>
+              <option value="All Questions">All / General Interview</option>
+            </select>
+          </div>
+          <div>
+            <label for="promptVersionSelect">Prompt Version (Academic Evaluation)</label>
+            <select id="promptVersionSelect" title="Choose prompt version for evaluation">
+              <option value="final" selected>Final (Context-Aware + Guardrails) [Recommended]</option>
+              <option value="v3">Version 3 (Refined Rubric & Scoring Anchors)</option>
+              <option value="v2">Version 2 (Rubric-Based Evaluator)</option>
+              <option value="v1">Version 1 (Basic Role Evaluator)</option>
+            </select>
+          </div>
+        </div>
+
         <label for="questionSelect">Interview Question</label>
         <select id="questionSelect" title="Choose interview question"></select>
         <input id="customQuestion" class="hidden" placeholder="Enter custom question" />
@@ -308,6 +344,77 @@
             <button id="stopInterviewBtn" type="button" class="ghost">Stop Interview</button>
           </div>
           <div id="practiceThreadItems"></div>
+        </div>
+
+        <!-- Problem C10: Structured Evaluation & Multi-turn Feedback -->
+        <div id="c10FeedbackContainer" class="c10-feedback-panel hidden" aria-live="polite">
+          <div class="c10-header-card">
+            <div class="c10-score-badge-wrap">
+              <span class="c10-score-badge"><span id="c10TotalScore">9.0</span> / 10</span>
+              <span id="c10PerformanceTier" class="c10-tier-badge">Strong Answer</span>
+              <span id="c10PromptBadge" class="c10-ver-badge">Prompt Final</span>
+              <span id="c10StatusNotice" class="c10-status-badge hidden">Simulated</span>
+            </div>
+            <p id="c10AssessmentSummary" class="c10-summary-text"></p>
+          </div>
+
+          <div class="c10-rubric-grid">
+            <div class="c10-rubric-card">
+              <div class="c10-rubric-title">
+                <span>Technical Accuracy</span>
+                <strong id="c10TechScore">4 / 4</strong>
+              </div>
+              <p id="c10TechReason" class="c10-rubric-reason"></p>
+            </div>
+            <div class="c10-rubric-card">
+              <div class="c10-rubric-title">
+                <span>Completeness</span>
+                <strong id="c10CompScore">1 / 2</strong>
+              </div>
+              <p id="c10CompReason" class="c10-rubric-reason"></p>
+            </div>
+            <div class="c10-rubric-card">
+              <div class="c10-rubric-title">
+                <span>Relevance</span>
+                <strong id="c10RelScore">2 / 2</strong>
+              </div>
+              <p id="c10RelReason" class="c10-rubric-reason"></p>
+            </div>
+            <div class="c10-rubric-card">
+              <div class="c10-rubric-title">
+                <span>Communication & Clarity</span>
+                <strong id="c10CommScore">2 / 2</strong>
+              </div>
+              <p id="c10CommReason" class="c10-rubric-reason"></p>
+            </div>
+          </div>
+
+          <div class="c10-strengths-box">
+            <h4>✅ Strengths</h4>
+            <ul id="c10StrengthsList"></ul>
+          </div>
+
+          <div class="c10-improvements-box">
+            <h4>💡 Areas for Improvement</h4>
+            <ul id="c10ImprovementsList"></ul>
+          </div>
+
+          <div class="c10-model-answer-box">
+            <div class="c10-model-answer-header">
+              <h4>🎯 Improved Model Answer</h4>
+              <button id="copyModelAnswerBtn" type="button" class="ghost-small">📋 Copy Answer</button>
+            </div>
+            <p id="c10ModelAnswerText" class="c10-model-text"></p>
+          </div>
+
+          <div class="c10-followup-box">
+            <div class="c10-followup-header">
+              <h4>🔄 Adaptive Follow-up Question</h4>
+              <span class="c10-followup-tag">Multi-turn Interview Context</span>
+            </div>
+            <p id="c10FollowupText" class="c10-followup-text"></p>
+            <button id="acceptFollowupBtn" type="button" class="cta-secondary">🎙️ Answer This Follow-up Question</button>
+          </div>
         </div>
 
         <pre id="analysisResult" class="result"></pre>

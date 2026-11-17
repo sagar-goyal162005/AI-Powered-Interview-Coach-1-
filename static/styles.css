@@ -2228,3 +2228,288 @@ gap: 0.3rem;
     opacity: 0;
   }
 }
+
+
+/* ==========================================================================
+   Problem C10: AI-Powered Software Engineering Interview Coach Styling
+   ========================================================================== */
+
+.c10-setup-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  background: rgba(15, 23, 42, 0.45);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.c10-setup-grid label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.c10-setup-grid select {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  background: rgba(30, 41, 59, 0.85);
+  color: #f1f5f9;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.c10-setup-grid select:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  outline: none;
+}
+
+.c10-feedback-panel {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.c10-header-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.c10-score-badge-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.c10-score-badge {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  padding: 0.3rem 0.9rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.c10-tier-badge {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.c10-ver-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+}
+
+.c10-status-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.35);
+}
+
+.c10-summary-text {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+.c10-rubric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+}
+
+.c10-rubric-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.c10-rubric-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+
+.c10-rubric-title strong {
+  font-size: 1.05rem;
+  color: #38bdf8;
+}
+
+.c10-rubric-reason {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #e2e8f0;
+  margin: 0;
+}
+
+.c10-strengths-box,
+.c10-improvements-box {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 12px;
+  padding: 1.1rem 1.4rem;
+}
+
+.c10-strengths-box {
+  border-left: 4px solid #22c55e;
+}
+
+.c10-improvements-box {
+  border-left: 4px solid #f59e0b;
+}
+
+.c10-strengths-box h4,
+.c10-improvements-box h4 {
+  margin: 0 0 0.6rem 0;
+  font-size: 0.95rem;
+  color: #f8fafc;
+}
+
+.c10-strengths-box ul,
+.c10-improvements-box ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.c10-strengths-box li,
+.c10-improvements-box li {
+  margin-bottom: 0.35rem;
+}
+
+.c10-model-answer-box {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 12px;
+  padding: 1.25rem 1.4rem;
+}
+
+.c10-model-answer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.65rem;
+}
+
+.c10-model-answer-header h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #38bdf8;
+}
+
+.ghost-small {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #cbd5e1;
+  border-radius: 6px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ghost-small:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.c10-model-text {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #e2e8f0;
+  font-style: italic;
+  margin: 0;
+}
+
+.c10-followup-box {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 12px;
+  padding: 1.25rem 1.4rem;
+}
+
+.c10-followup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.65rem;
+}
+
+.c10-followup-header h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #c084fc;
+}
+
+.c10-followup-tag {
+  font-size: 0.75rem;
+  color: #c084fc;
+  background: rgba(168, 85, 247, 0.15);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.c10-followup-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #f1f5f9;
+  margin-bottom: 1rem;
+}
+
+.cta-secondary {
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.cta-secondary:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}

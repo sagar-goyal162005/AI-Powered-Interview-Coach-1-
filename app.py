@@ -32,6 +32,7 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 from werkzeug.utils import secure_filename
 
 from ats_checker import ALLOWED_EXTENSIONS, analyze_resume_file
+from c10_evaluator import SWE_QUESTION_BANK, evaluate_student_answer, get_ai_client
 
 try:
     import speech_recognition as sr
@@ -157,8 +158,19 @@ REPORTS_DIR = "reports"
 _email_otp_store = {}
 _OTP_TTL_SECONDS = 10 * 60
 
-api_key = os.getenv("API_KEY") or os.getenv("HF_TOKEN")
-openai_base_url = os.getenv("API_BASE_URL") or os.getenv("OPENAI_BASE_URL") or ""
+api_key = (
+    os.getenv("API_KEY")
+    or os.getenv("GEMINI_API_KEY")
+    or os.getenv("OPENAI_API_KEY")
+    or os.getenv("HF_TOKEN")
+    or ""
+).strip()
+openai_base_url = (
+    os.getenv("API_BASE_URL")
+    or os.getenv("GEMINI_BASE_URL")
+    or os.getenv("OPENAI_BASE_URL")
+    or "https://generativelanguage.googleapis.com/v1beta/openai/"
+).strip()
 freepik_api_key = os.getenv("FREEPIK_API_KEY")
 
 client = None
@@ -1523,13 +1535,74 @@ def _find_username_by_email(email: str) -> str | None:
 
 @app.get("/api/meta")
 def api_meta():
+    configured_model = os.getenv("MODEL_NAME") or os.getenv("GEMINI_MODEL") or os.getenv("OPENAI_MODEL") or "gemini-1.5-flash"
+    configured_key = bool(os.getenv("API_KEY") or os.getenv("GEMINI_API_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("HF_TOKEN"))
     return jsonify(
         {
             "questions": QUESTION_BANK,
-            "has_api_key": bool(api_key),
+            "swe_questions": SWE_QUESTION_BANK,
+            "has_api_key": configured_key,
+            "model_name": configured_model,
+            "api_base_url": openai_base_url,
             "has_freepik_key": bool(freepik_api_key),
         }
     )
+
+
+@app.get("/api/c10/questions")
+def api_c10_questions():
+    """Return categorized SWE question bank for Problem C10."""
+    return jsonify({
+        "categories": SWE_QUESTION_BANK
+    })
+
+
+@app.post("/api/c10/evaluate")
+def api_c10_evaluate():
+    """
+    Dedicated Problem C10 Evaluation Endpoint.
+    Accepts job role, category, question, student answer, thread turns, and prompt version.
+    Returns 10-mark rubric breakdown, strengths, improvements, model answer, and follow-up question.
+    """
+    username = session.get("username")
+    data = request.get_json(force=True) or {}
+    job_role = (data.get("job_role") or "Software Developer").strip()
+    category = (data.get("category") or "Data Structures & Algorithms").strip()
+    question = (data.get("question") or "").strip()
+    answer = (data.get("answer") or "").strip()
+    thread_turns = data.get("thread_turns") or []
+    prompt_version = (data.get("prompt_version") or "final").strip()
+
+    if not question:
+        return jsonify({"error": "Question is required"}), 400
+
+    evaluation = evaluate_student_answer(
+        job_role=job_role,
+        category=category,
+        question=question,
+        student_answer=answer,
+        thread_turns=thread_turns,
+        prompt_version=prompt_version
+    )
+
+    # If user is logged in, optionally record into session reports
+    if username:
+        try:
+            report_data = {
+                "type": "c10_evaluation",
+                "job_role": job_role,
+                "category": category,
+                "question": question,
+                "answer": answer,
+                "score": evaluation.get("total_score", 0.0),
+                "evaluation": evaluation,
+                "timestamp": datetime.now().isoformat(),
+            }
+            save_interview_report(username, report_data)
+        except Exception:
+            pass
+
+    return jsonify(evaluation)
 
 
 @app.get("/api/me")
@@ -2179,9 +2252,30 @@ def api_practice_text():
     thread_turns = data.get("thread_turns")
     if not thread_turns:
         thread_turns = [{"question": question, "answer": answer}]
-    payload["follow_up_question"] = _generate_followup_question(root_question, thread_turns)
+    
+    # C10 Technical Evaluation Integration
+    job_role = (data.get("job_role") or "Software Developer").strip()
+    category = (data.get("category") or "Data Structures & Algorithms").strip()
+    prompt_version = (data.get("prompt_version") or "final").strip()
+    
+    c10_eval = evaluate_student_answer(
+        job_role=job_role,
+        category=category,
+        question=question,
+        student_answer=answer,
+        thread_turns=thread_turns,
+        prompt_version=prompt_version
+    )
+    payload["c10_evaluation"] = c10_eval
+    if c10_eval.get("follow_up_question"):
+        payload["follow_up_question"] = c10_eval["follow_up_question"]
+    else:
+        payload["follow_up_question"] = _generate_followup_question(root_question, thread_turns)
+
     dims = _dimension_scores_from_report({"analysis": payload["analysis"]})
     grade = (dims.get("confidence", 0) + dims.get("clarity", 0) + dims.get("technical_depth", 0)) / 3.0
+    if c10_eval.get("total_score") is not None:
+        grade = max(grade, float(c10_eval["total_score"]) / 10.0)
     is_boss = len(thread_turns) > 0 and len(thread_turns) % 4 == 0
     payload["gamification"] = _calculate_gamification(username, grade, is_boss)
     if is_boss:
@@ -2213,9 +2307,30 @@ def api_practice_audio():
     thread_turns = data.get("thread_turns")
     if not thread_turns:
         thread_turns = [{"question": question, "answer": transcription}]
-    payload["follow_up_question"] = _generate_followup_question(root_question, thread_turns)
+    
+    # C10 Technical Evaluation Integration
+    job_role = (data.get("job_role") or "Software Developer").strip()
+    category = (data.get("category") or "Data Structures & Algorithms").strip()
+    prompt_version = (data.get("prompt_version") or "final").strip()
+    
+    c10_eval = evaluate_student_answer(
+        job_role=job_role,
+        category=category,
+        question=question,
+        student_answer=transcription,
+        thread_turns=thread_turns,
+        prompt_version=prompt_version
+    )
+    payload["c10_evaluation"] = c10_eval
+    if c10_eval.get("follow_up_question"):
+        payload["follow_up_question"] = c10_eval["follow_up_question"]
+    else:
+        payload["follow_up_question"] = _generate_followup_question(root_question, thread_turns)
+
     dims = _dimension_scores_from_report({"analysis": payload["analysis"]})
     grade = (dims.get("confidence", 0) + dims.get("clarity", 0) + dims.get("technical_depth", 0)) / 3.0
+    if c10_eval.get("total_score") is not None:
+        grade = max(grade, float(c10_eval["total_score"]) / 10.0)
     is_boss = len(thread_turns) > 0 and len(thread_turns) % 4 == 0
     payload["gamification"] = _calculate_gamification(username, grade, is_boss)
     if is_boss:

@@ -8,6 +8,10 @@ __pycache__/
 reports/
 users.json
 *.log
+.codeatlas/
+~$*
+~$*.docx
+~$*.pptx
 
 openenv_env/
 nltk_data/

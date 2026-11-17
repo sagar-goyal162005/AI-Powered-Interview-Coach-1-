@@ -1,0 +1,116 @@
+[
+  {
+    "test_id": "TC01",
+    "category": "Data Structures and Algorithms",
+    "job_role": "Software Developer",
+    "question": "What is the difference between an Array and a Linked List?",
+    "student_answer": "An array stores elements in continuous memory locations, while a linked list stores elements in nodes connected using pointers. Arrays allow faster access using indexes, whereas linked lists make insertion and deletion easier in certain situations.",
+    "type": "Normal",
+    "verified_scores": {
+      "V1": 8.0,
+      "V2": 8.5,
+      "V3": 9.0
+    },
+    "status": "VERIFIED_EXPERIMENT",
+    "notes": "Verified experimentally with ChatGPT. Exact prompt texts and model responses preserved."
+  },
+  {
+    "test_id": "TC02",
+    "category": "Core Computer Science (DBMS)",
+    "job_role": "Backend Engineer",
+    "question": "Explain the difference between clustered and non-clustered indexing in relational databases.",
+    "student_answer": "A clustered index alters the physical order of data in the table, meaning a table can have only one clustered index. A non-clustered index creates a separate structure pointing to the physical records, allowing multiple non-clustered indexes per table.",
+    "type": "Normal",
+    "verified_scores": null,
+    "status": "PENDING",
+    "notes": "Tests technical comparison and memory/storage layout understanding."
+  },
+  {
+    "test_id": "TC03",
+    "category": "Core Computer Science (Operating Systems)",
+    "job_role": "Software Developer",
+    "question": "What is a deadlock and what are the four necessary conditions for deadlock to occur?",
+    "student_answer": "Deadlock is when processes wait forever for each other's resources. The conditions are Mutual Exclusion, Hold and Wait, and Circular Wait. I can't remember the fourth one.",
+    "type": "Partially Correct",
+    "verified_scores": null,
+    "status": "PENDING",
+    "notes": "Tests partial completeness (misses No Preemption) and evaluator's ability to distinguish missing from wrong."
+  },
+  {
+    "test_id": "TC04",
+    "category": "Core Computer Science (Computer Networks)",
+    "job_role": "Full Stack Developer",
+    "question": "Explain why TCP is preferred over UDP for file transfer applications like FTP.",
+    "student_answer": "TCP is preferred because UDP is slower and encrypts all packets automatically, whereas TCP provides faster raw speed without any handshakes.",
+    "type": "Incorrect",
+    "verified_scores": null,
+    "status": "PENDING",
+    "notes": "Tests severe technical inversion and fact-checking (UDP does not encrypt and is not slower; TCP provides reliability/handshake)."
+  },
+  {
+    "test_id": "TC05",
+    "category": "Core Computer Science (OOP)",
+    "job_role": "Software Developer",
+    "question": "What is the difference between method overloading and method overriding in Object-Oriented Programming?",
+    "student_answer": "",
+    "type": "Edge (Empty Answer)",
+    "verified_scores": null,
+    "status": "PENDING",
+    "notes": "Edge case: verifies prompt robustness against empty input; must award 0 without crashing or hallucinating strengths."
+  },
+  {
+    "test_id": "TC06",
+    "category": "Data Structures and Algorithms",
+    "job_role": "Software Developer",
+    "question": "How would you detect a cycle in a singly linked list?",
+    "student_answer": "Bhai do pointers lenge fast aur slow. Slow ek step chalega aur fast do step. Agar dono mil gaye toh cycle hai Floyd cycle detection se.",
+    "type": "Edge (Informal / Hinglish Phrasing)",
+    "verified_scores": null,
+    "status": "PENDING",
+    "notes": "Edge case: tests whether the prompt correctly recognises technically sound logic despite informal Hinglish communication."
+  },
+  {
+    "test_id": "TC07",
+    "category": "Software Development Projects",
+    "job_role": "Full Stack Developer",
+    "question": "How did you handle authentication and session security in your web project?",
+    "student_answer": "I implemented JWT with access tokens stored in memory and HTTP-only, secure, SameSite cookies for refresh tokens. When access tokens expire after 15 minutes, the client automatically requests a new access token via the refresh endpoint.",
+    "type": "Normal",
+    "verified_scores": null,
+    "status": "PENDING",
+    "notes": "Tests real-world project question, architectural rationale, and token security best practices."
+  },
+  {
+    "test_id": "TC08",
+    "category": "Data Structures and Algorithms",
+    "job_role": "Software Developer",
+    "question": "What is the time and space complexity of QuickSort in the best, average, and worst cases?",
+    "student_answer": "QuickSort takes O(n log n) in best and average cases. Worst case is O(n^2) if pivot selection is poor like always picking the smallest element in a sorted array. Space complexity is O(1) always.",
+    "type": "Partially Correct",
+    "verified_scores": null,
+    "status": "PENDING",
+    "notes": "Tests technical depth: space complexity is O(log n) call stack in average case and O(n) worst case, not O(1)."
+  },
+  {
+    "test_id": "TC09",
+    "category": "Core Computer Science (DBMS)",
+    "job_role": "Software Developer",
+    "question": "What are ACID properties in database management systems?",
+    "student_answer": "ACID stands for creating responsive web pages using CSS Grid and Flexbox for modern frontends.",
+    "type": "Edge (Completely Irrelevant)",
+    "verified_scores": null,
+    "status": "PENDING",
+    "notes": "Edge case: test relevance penalty; should award 0 for relevance and technical accuracy."
+  },
+  {
+    "test_id": "TC10",
+    "category": "Software Development Projects",
+    "job_role": "Backend Engineer",
+    "question": "How would you optimize an SQL query that is running slowly in production?",
+    "student_answer": "First, run EXPLAIN ANALYZE to inspect the execution plan and scan types. Check if appropriate indexes exist on WHERE, JOIN, and ORDER BY columns. Eliminate SELECT *, avoid full table scans, and consider caching or query refactoring.",
+    "type": "Normal",
+    "verified_scores": null,
+    "status": "PENDING",
+    "notes": "Tests practical engineering workflow and systematic database troubleshooting."
+  }
+]
