@@ -11,3 +11,9 @@ __pycache__
 !.env_example
 reports
 *.log
+deploy_*.py
+*.token
+test_prompt_live.py
+.codeatlas
+android
+.nltk_data

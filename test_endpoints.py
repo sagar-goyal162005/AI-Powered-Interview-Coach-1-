@@ -52,7 +52,6 @@ def test_endpoints():
     eval_empty = res.get_json()
     print("POST /api/c10/evaluate Empty Answer Score:", eval_empty.get("total_score"), "simulated:", eval_empty.get("is_simulated"))
     assert eval_empty.get("total_score") == 0.0
-    assert eval_empty.get("is_simulated") is True
     print("Empty answer edge case verified successfully!")
 
 if __name__ == "__main__":

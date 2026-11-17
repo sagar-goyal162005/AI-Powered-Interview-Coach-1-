@@ -1,9 +1,11 @@
 ---
 title: AI-Powered Software Engineering Mock Interview Coach
+emoji: 🎓
 colorFrom: blue
 colorTo: green
-sdk: docker
-app_port: 7860
+sdk: gradio
+sdk_version: 5.16.0
+app_file: gradio_app.py
 pinned: false
 tags:
   - prompt-engineering

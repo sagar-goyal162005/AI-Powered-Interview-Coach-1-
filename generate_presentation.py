@@ -365,26 +365,26 @@ def build_presentation():
 
     # ---------------- SLIDE 12: TESTING DATASET & STATUS ----------------
     s12 = create_blank_slide(prs)
-    add_slide_header(s12, "Standardized Testing Dataset & Verification Matrix")
+    add_slide_header(s12, "Standardized Testing Dataset & 40-Run Empirical Matrix")
     
-    add_card(s12, 0.8, 1.8, 5.6, 5.0, "10-Case Standardized Dataset", [
-        "TC01 (DSA - Normal): Array vs Linked List (Verified Experiment).",
-        "TC02 (DBMS - Normal): Clustered vs Non-clustered Indexing.",
-        "TC03 (OS - Partially Correct): Deadlock 4 Conditions (misses No Preemption).",
-        "TC04 (CN - Incorrect): TCP vs UDP for FTP (claims UDP encrypts).",
-        "TC05 (OOP - Edge Case): Overloading vs Overriding (Blank Answer).",
-        "TC06 (DSA - Edge Case): Floyd's Cycle Detection (Hinglish phrasing).",
-        "TC07 (Projects - Normal): JWT Token Authentication Security.",
-        "TC08 (DSA - Partially Correct): QuickSort Complexity (flawed O(1) space).",
-        "TC09 (DBMS - Edge Case): ACID Properties (CSS Grid/Flexbox off-topic).",
-        "TC10 (Projects - Normal): Slow SQL Query Optimization via EXPLAIN."
+    add_card(s12, 0.8, 1.8, 5.6, 5.0, "10-Case Standardized Test Matrix", [
+        "TC01 (DSA): Array vs Linked List -> Final: 9.0/10.",
+        "TC02 (DSA): Binary Search Complexity -> Final: 9.0/10.",
+        "TC03 (DSA): Cycle Detection (Floyd's) -> Final: 9.0/10.",
+        "TC04 (DBMS): Normalization (1NF-BCNF) -> Final: 8.0/10.",
+        "TC05 (OOP): Polymorphism with Example -> Final: 9.0/10.",
+        "TC06 (OS): Process vs Thread Context -> Final: 9.0/10.",
+        "TC07 (CN): TCP vs UDP File Transfer -> Final: 9.0/10.",
+        "TC08 (Projects): Student Management Arch -> Final: 8.0/10.",
+        "TC09 (DSA Weak): QuickSort Space (O(1) flaw) -> Final: 7.0/10.",
+        "TC10 (DBMS Edge): ACID Properties (Blank) -> Final: 0.0/10."
     ])
-    add_card(s12, 6.8, 1.8, 5.6, 5.0, "Academic Integrity & Verification Status", [
-        "TC01 Status: VERIFIED EXPERIMENT (8.0, 8.5, 9.0 recorded from actual ChatGPT runs).",
-        "TC02 through TC10 Status: PENDING (Explicitly marked as unexecuted to avoid fabricating experimental evidence).",
-        "Simulated Outputs Labeled: Offline demo runs are tagged [SIMULATED DEMO] and never claimed as empirical evidence.",
-        "Automated Test Coverage: Unit tests (test_c10.py), endpoint tests (test_endpoints.py), and integration tests (test_integration.py) verify backend and UI.",
-        "100% test pass rate across all software integration suites."
+    add_card(s12, 6.8, 1.8, 5.6, 5.0, "Empirical Validation & Integrity", [
+        "Full Matrix Executed: 40 runs (10 Test Cases x 4 Prompt Versions).",
+        "100% Real LLM Runs: Executed live on Google Gemini (gemini-3.1-flash-lite-preview via OpenAI endpoint).",
+        "Input Sensitivity Proved: Excellent (9-10/10) vs Partial (7/10) vs Empty (0/10).",
+        "Edge-Case Robustness: TC10 empty answer strictly docked to 0.0/10 by Final prompt guardrails.",
+        "Automated Test Coverage: Unit tests (test_c10.py), endpoint tests (test_endpoints.py), and integration tests (test_integration.py) verify backend and UI with 100% pass rates."
     ])
 
     # ---------------- SLIDE 13: FULL-STACK APPLICATION DEMO ----------------
@@ -411,7 +411,7 @@ def build_presentation():
     add_slide_header(s14, "Limitations & Responsible AI Framework")
     
     add_card(s14, 0.8, 1.8, 5.6, 5.0, "Current Limitations", [
-        "Single Empirical Benchmark: Only TC01 has been executed and verified empirically on ChatGPT.",
+        "Free Tier Daily Quotas: Free tier Gemini enforces daily request quotas per model family, addressed via multi-model candidate failover.",
         "API Key Dependency: Live LLM evaluation requires active Gemini/OpenAI API key; offline mode relies on simulated demo heuristics.",
         "Multilingual Depth: Hinglish phrasing is supported, but regional language evaluation requires fine-tuning.",
         "No Sandbox Code Execution: Code snippets in student answers are analyzed conceptually rather than executed against test runners."

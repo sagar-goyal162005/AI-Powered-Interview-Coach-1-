@@ -1242,14 +1242,27 @@ function renderC10Feedback(evalData) {
 
   const statusBadge = document.getElementById("c10StatusNotice");
   if (statusBadge) {
-    if (evalData.is_simulated) {
-      statusBadge.textContent = "SIMULATED DEMO";
+    if (evalData.api_error) {
+      statusBadge.textContent = "API PROVIDER ERROR";
+      statusBadge.style.background = "#fee2e2";
+      statusBadge.style.color = "#991b1b";
+      statusBadge.classList.remove("hidden");
+    } else if (evalData.is_simulated) {
+      statusBadge.textContent = "SIMULATED DEMO (NO API KEY)";
+      statusBadge.style.background = "#fef3c7";
+      statusBadge.style.color = "#92400e";
       statusBadge.classList.remove("hidden");
     } else if (evalData.is_verified_benchmark) {
-      statusBadge.textContent = "VERIFIED EXPERIMENT";
+      statusBadge.textContent = "VERIFIED BENCHMARK";
+      statusBadge.style.background = "#e0e7ff";
+      statusBadge.style.color = "#3730a3";
       statusBadge.classList.remove("hidden");
     } else {
-      statusBadge.classList.add("hidden");
+      const modelTag = (evalData.model_used || "GEMINI").toUpperCase();
+      statusBadge.textContent = `LIVE AI (${modelTag})`;
+      statusBadge.style.background = "#dcfce7";
+      statusBadge.style.color = "#166534";
+      statusBadge.classList.remove("hidden");
     }
   }
 

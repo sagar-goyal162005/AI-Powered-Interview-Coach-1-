@@ -2,9 +2,13 @@
 venv/
 __pycache__/
 *.pyc
+# Credentials & Temporary Deployment Scripts
 .env
 *.env
 !.env_example
+deploy_*.py
+*.token
+test_prompt_live.py
 reports/
 users.json
 *.log

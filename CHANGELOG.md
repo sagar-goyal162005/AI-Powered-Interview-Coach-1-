@@ -13,7 +13,26 @@ This project follows academic project milestones for Bennett University (SCSE404
 
 ## [Unreleased / Milestone 2] - 2026-11-17
 
+### Fixed
+- **Root Cause Fix for Repeated 7.5/10 Simulated Output:**
+  - Diagnosed that Google retired `gemini-1.5-flash` on the OpenAI-compatible endpoint, resulting in 404 NotFound.
+  - Eliminated silent exception swallowing in `c10_evaluator.py` that previously defaulted to an offline demo template.
+  - Configured active Google Gemini model (`gemini-3.1-flash-lite-preview` / `gemini-3-flash-preview`) with automatic multi-model candidate failover.
+  - Transparent error reporting: API provider errors (401, 429 quota, connection timeout) are now surfaced explicitly with `api_error: True` instead of being masked as fake scores.
+  - Dynamic simulation heuristics: Offline demo mode now uses input-sensitive heuristic scoring (empty=0, short=2-5, comprehensive=7-8.5) and is explicitly labeled `[SIMULATED DEMO - NO API KEY]`.
+
 ### Added
+- **40-Run Empirical Test Matrix (`test-data/test_execution_matrix.json` & `experiment-results/full_test_matrix_results.md`):**
+  - Executed 10 comprehensive test cases across all 4 prompt versions (V1, V2, V3, Final).
+  - 100% genuine LLM runs (40/40 successful real model calls, 0 simulated runs, 0 API errors).
+  - Demonstrated clear prompt evolution: V1 uncalibrated -> V2 rubric-based -> V3 anchored scoring -> Final multi-turn context + edge-case guardrails.
+  - Proved input sensitivity: Excellent (9-10/10), Partial (7/10 for TC09 QuickSort space error), and Empty (0.0/10 for TC10).
+- **Updated Project Documentation & Academic Deliverables:**
+  - Regenerated `docs/Prompt_Engineering_Experiment_Documentation.docx` with Section 7 full empirical results table.
+  - Regenerated `docs/AI_Software_Interview_Coach_Final_Report.docx` with Chapter 6 & 7 empirical testing discussion.
+  - Regenerated `presentation/AI_Software_Interview_Coach_Final_Presentation.pptx` with Slide 12 40-run verification matrix.
+
+### Added (Initial C10 Release)
 - **Problem C10 Prompt Architecture (`prompts/`):**
   - `prompts/v1/evaluator_v1.txt`: Baseline role-prompted evaluator with open-ended feedback generation.
   - `prompts/v1/response_v1.md`: Verified ChatGPT benchmark output for TC01 (Score: 8.0/10).

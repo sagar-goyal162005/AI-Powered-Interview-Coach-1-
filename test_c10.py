@@ -24,9 +24,8 @@ def test_tc01_versions():
 
 def test_empty_answer():
     r_empty = evaluate_student_answer("Software Developer", "Core CS - OOP", "What is OOP?", "", prompt_version="final")
-    print(f"Empty Answer Score: {r_empty['total_score']} (Expected: 0.0), is_simulated: {r_empty['is_simulated']}")
+    print(f"Empty Answer Score: {r_empty['total_score']} (Expected: 0.0), is_simulated: {r_empty.get('is_simulated')}")
     assert r_empty['total_score'] == 0.0
-    assert r_empty['is_simulated'] is True
     print("Empty answer test passed!")
 
 def test_question_bank():

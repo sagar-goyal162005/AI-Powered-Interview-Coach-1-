@@ -20,6 +20,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Upgrade pip first
 RUN pip install --upgrade pip setuptools wheel
 
+# Pre-install CPU-only torch to prevent downloading multi-gigabyte CUDA packages
+RUN pip install --no-cache-dir torch>=2.2.0 --extra-index-url https://download.pytorch.org/whl/cpu
+
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
